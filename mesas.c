@@ -39,7 +39,7 @@ void altaMesa(Mesa** mesas, int* cantidad) {
     nuevaMesa.id = (*cantidad > 0) ? (*mesas)[*cantidad - 1].id + 1 : 1; // Asignacion del ID
 
     printf("Ingrese el nombre del juego (Ruleta, Blackjack, Poker): "); //solicita y agrega nombre del juego de la mesa
-    scanf(" %[^\n]", nuevaMesa.nombreJuego);
+    scanf("%s", nuevaMesa.nombreJuego);
 
     if (!esValido(nuevaMesa.nombreJuego)) { //comprueba que el juego sea valido, sino tira error
         printf("Juego no válido. Mesa no creada.\n");
@@ -78,7 +78,7 @@ int bajaMesa(Mesa** mesas, int* cantidad) {
 
     int idBuscado;
     printf("Ingrese el ID de la mesa a eliminar: "); //pedimos y guardamos el ID de la mesa a eliminar
-    scanf("%d", &idBuscado);
+    scanf("%i", &idBuscado);
 
     int id = buscarPorId(*mesas, *cantidad, idBuscado); //buscamos la mesa por ID y comprobamos que exista, sino tira error
     if (id == -1) {
@@ -111,7 +111,7 @@ int modificarMesa(Mesa* mesas, int cantidad) {
 
     int idBuscado;
     printf("Ingrese el ID de la mesa a modificar: "); //pedimos y guardamos el ID de la mesa a modificar
-    scanf("%d", &idBuscado);
+    scanf("%i", &idBuscado);
 
     int id = buscarPorId(mesas, cantidad, idBuscado); //buscamos la mesa por ID y comprobamos que exista, sino tira error
     if (id == -1) {
@@ -179,7 +179,7 @@ int consultarMesa(Mesa* mesas, int cantidad) {
 
     int idBuscado;
     printf("Ingrese el ID de la mesa a consultar: "); //pedimos y guardamos el ID de la mesa a consultar
-    scanf("%d", &idBuscado);
+    scanf("%i", &idBuscado);
 
     int id = buscarPorId(mesas, cantidad, idBuscado); //buscamos la mesa por ID y comprobamos que exista, sino tira error
     if (id == -1) {
@@ -199,7 +199,33 @@ int consultarMesa(Mesa* mesas, int cantidad) {
 
 void consultarMesasPorTipo(Mesa* mesas, int cantidad) {
 
+    char tipo[50];
+    printf("Tipo de juego a buscar: "); //pedimos el tipo a buscar y lo guardamos
+    scanf("%s", tipo);
+
+    int encontradas = 0; //contador de mesas encontradas del tipo buscado
+    printf("\n Mesas de tipo '%s':\n", tipo);
+
+    for (int i = 0; i < cantidad; i++) {
+        if (strcmp(mesas[i].nombreJuego, tipo) == 0) { //iteramos y mapeamos todas las mesas del tipo buscado, mostrando su informacion
+            printf("    |------------------------------| \n");
+            printf("    | Mesa #%i                     | \n",   mesas[i].id);
+            printf("    | Juego: %s                    | \n",   mesas[i].nombreJuego);
+            printf("    | Capacidad: %d jugadores      | \n",   mesas[i].capacidadMax);
+            printf("    | Disponible: %s               | \n",   mesas[i].disponible ? "Sí" : "No");
+            printf("    | Estado: %s                   | \n",   mesas[i].activa     ? "Activa" : "Inactiva");
+            printf("    |------------------------------| \n");  
+            encontradas++;
+        }
+    }
+
+    if (encontradas == 0)
+        printf("No hay mesas de tipo '%s' registradas. \n", tipo); //si no hay mesas del tipo buscado, mostramos un mensaje indicando esto
+    else
+        printf("\n Total: %i mesa(s).\n", encontradas); //si hay mesas del tipo buscado, mostramos el total encontrado
 }
+
+
 
 void listarMesasAlfabetico(Mesa* mesas, int cantidad) {
 
