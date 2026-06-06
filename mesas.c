@@ -69,7 +69,7 @@ void altaMesa(Mesa** mesas, int* cantidad) {
     (*cantidad)++; //aumento la cantidad de mesas
 
     //guardarMesasEnArchivo(*mesas, *cantidad);
-    //printf("Mesa agregada correctamente.\n", nuevaMesa.id);
+    //printf("Mesa agregada correctamente.\n");
 
 }
 
@@ -101,14 +101,70 @@ int bajaMesa(Mesa** mesas, int* cantidad) {
     }
 
     //guardarMesasEnArchivo(*mesas, *cantidad);
-    //printf("Mesa eliminada correctamente.\n", id);
+    //printf("Mesa eliminada correctamente.\n");
     return 1;
 
 }
 
 // int → 1 si encontró y modificó, 0 si no encontró
 int modificarMesa(Mesa* mesas, int cantidad) {
+
+    int idBuscado;
+    printf("Ingrese el ID de la mesa a modificar: "); //pedimos y guardamos el ID de la mesa a modificar
+    scanf("%d", &idBuscado);
+
+    int id = buscarPorId(mesas, cantidad, idBuscado); //buscamos la mesa por ID y comprobamos que exista, sino tira error
+    if (id == -1) {
+            printf("No existe una mesa con ID %i \n", idBuscado);
+            return 0;
+        }
+
+    printf("\nDatos actuales:\n"); //muestro los datos actuales de la mesa
+    printf("Juego: %s\n", mesas[id].nombreJuego);
+    printf("Capacidad: %i \n", mesas[id].capacidadMax);
+    printf("Estado: %s\n", mesas[id].activa ? "Activa" : "Inactiva");
+
+    // - Modificar mesa ------------
+    printf("\n Tabla de modificaciones: \n");
+
+    // - Modificar ""Tipo de juego"" ------------
     
+    printf("\n Nuevo tipo de juego: (selecciona la opcion del menu)\n");
+    printf("0. Mantener actual\n");
+    printf("1. Ruleta\n");
+    printf("2. Blackjack\n");
+    printf("3. Poker\n");
+
+    int opcion;
+    scanf("%i", &opcion);
+
+    if (opcion >= 1 && opcion <= CANT_JUEGOS)
+        strcpy(mesas[id].nombreJuego, juegosValidos[opcion - 1]);
+
+    // - Modificar ""Capacidad"" ------------
+
+    printf("Nueva capacidad: (0 para mantener actual) \n");
+    int nuevaCap;
+    scanf("%d", &nuevaCap);
+    if (nuevaCap > 0) mesas[id].capacidadMax = nuevaCap;
+
+    // - Modificar ""disponibilidad"" ------------
+    printf("Disponible: (1=si, 0=ocupada)");
+    int nuevaDisp;
+    scanf("%d", &nuevaDisp);
+    if (nuevaDisp == 0 || nuevaDisp == 1) mesas[id].disponible = nuevaDisp;
+
+    // - Modificar ""activa"" ------------
+    printf("Activa: (1=si, 0=dada de baja)");
+    int nuevaAc;
+    scanf("%d", &nuevaAc);
+    if (nuevaAc == 0 || nuevaAc == 1) mesas[id].activa = nuevaAc;
+
+    //--------------------------
+
+    //guardarMesasEnArchivo(mesas, cantidad);
+    //printf("Mesa modificada correctamente.\n");
+    return 1;
 }
 
 // int → 1 si encontró y mostró, 0 si no existe
