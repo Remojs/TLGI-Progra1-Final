@@ -76,6 +76,34 @@ void altaMesa(Mesa** mesas, int* cantidad) {
 // int → 1 si encontró y eliminó, 0 si no encontró el ID
 int bajaMesa(Mesa** mesas, int* cantidad) {
 
+    int idBuscado;
+    printf("Ingrese el ID de la mesa a eliminar: "); //pedimos y guardamos el ID de la mesa a eliminar
+    scanf("%d", &idBuscado);
+
+    int id = buscarPorId(*mesas, *cantidad, idBuscado); //buscamos la mesa por ID y comprobamos que exista, sino tira error
+    if (id == -1) {
+            printf("No existe una mesa con ID %i \n", idBuscado);
+            return 0;
+        }
+
+    for(int i = id; i < *cantidad - 1; i++) { //desplazamos las mesas siguientes para eliminar la mesa deseada
+        (*mesas)[i] = (*mesas)[i + 1];
+    }
+
+    (*cantidad)--; //disminuimos la cantidad de mesas
+
+    if(*cantidad == 0){
+        free(*mesas); //si no quedan mesas, liberamos la memoria y asignamos el puntero a NULL
+        *mesas = NULL;
+    } else {
+        Mesa* temp = (Mesa*) realloc(*mesas, *cantidad * sizeof(Mesa)); //redimensionamos el arreglo de mesas
+        if (temp != NULL) *mesas = temp; //asignamos el nuevo arreglo al puntero original
+    }
+
+    //guardarMesasEnArchivo(*mesas, *cantidad);
+    //printf("Mesa eliminada correctamente.\n", id);
+    return 1;
+
 }
 
 // int → 1 si encontró y modificó, 0 si no encontró
