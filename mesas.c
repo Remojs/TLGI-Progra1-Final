@@ -119,10 +119,11 @@ int modificarMesa(Mesa* mesas, int cantidad) {
             return 0;
         }
 
-    printf("\nDatos actuales:\n"); //muestro los datos actuales de la mesa
+    printf("\nDatos actuales de la mesa %i: \n", idBuscado); //muestro los datos actuales de la mesa
     printf("Juego: %s\n", mesas[id].nombreJuego);
     printf("Capacidad: %i \n", mesas[id].capacidadMax);
-    printf("Estado: %s\n", mesas[id].activa ? "Activa" : "Inactiva");
+    printf("Disponibilidad: %s\n", mesas[id].disponible ? "Disponible" : "Ocupada");
+    printf("Activa: %s\n", mesas[id].activa ? "Activa" : "Dada de baja");
 
     // - Modificar mesa ------------
     printf("\n Tabla de modificaciones: \n");
@@ -144,18 +145,24 @@ int modificarMesa(Mesa* mesas, int cantidad) {
     // - Modificar ""Capacidad"" ------------
 
     printf("Nueva capacidad: (0 para mantener actual) \n");
+    printf("[Valor actual: %i] \n", mesas[id].capacidadMax);
+
     int nuevaCap;
     scanf("%d", &nuevaCap);
     if (nuevaCap > 0) mesas[id].capacidadMax = nuevaCap;
 
     // - Modificar ""disponibilidad"" ------------
-    printf("Disponible: (1=si, 0=ocupada)");
+    printf("Disponible: (1=si, 0=ocupada) \n");
+    printf("[Valor actual: %s] \n", mesas[id].disponible ? "Disponible" : "Ocupada");
+
     int nuevaDisp;
     scanf("%d", &nuevaDisp);
     if (nuevaDisp == 0 || nuevaDisp == 1) mesas[id].disponible = nuevaDisp;
 
     // - Modificar ""activa"" ------------
-    printf("Activa: (1=si, 0=dada de baja)");
+    printf("Activa: (1=si, 0=dada de baja) \n");
+    printf("[Valor actual: %s] \n", mesas[id].activa ? "Activa" : "Dada de baja");
+
     int nuevaAc;
     scanf("%d", &nuevaAc);
     if (nuevaAc == 0 || nuevaAc == 1) mesas[id].activa = nuevaAc;
@@ -170,6 +177,24 @@ int modificarMesa(Mesa* mesas, int cantidad) {
 // int → 1 si encontró y mostró, 0 si no existe
 int consultarMesa(Mesa* mesas, int cantidad) {
 
+    int idBuscado;
+    printf("Ingrese el ID de la mesa a consultar: "); //pedimos y guardamos el ID de la mesa a consultar
+    scanf("%d", &idBuscado);
+
+    int id = buscarPorId(mesas, cantidad, idBuscado); //buscamos la mesa por ID y comprobamos que exista, sino tira error
+    if (id == -1) {
+            printf("No existe una mesa con ID %i \n", idBuscado);
+            return 0;
+        }
+
+    printf("    |------------------------------| \n");
+    printf("    | Mesa #%i                     | \n",   mesas[id].id);
+    printf("    | Juego: %s                    | \n",   mesas[id].nombreJuego);
+    printf("    | Capacidad: %d jugadores      | \n",   mesas[id].capacidadMax);
+    printf("    | Disponible: %s               | \n",   mesas[id].disponible ? "Sí" : "No");
+    printf("    | Estado: %s                   | \n",   mesas[id].activa     ? "Activa" : "Inactiva");
+    printf("    |------------------------------| \n");
+    return 1;
 }
 
 void consultarMesasPorTipo(Mesa* mesas, int cantidad) {
