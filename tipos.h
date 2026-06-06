@@ -10,7 +10,7 @@
 typedef struct {
     int   id;
     char  nombre[50];
-    char  dni[15];
+    int  dni;
     int   nivelVip;   // 1=Bronce, 2=Plata, 3=Oro
     float saldo;
     int   activo;     // 1=activo, 0=dado de baja
