@@ -3,7 +3,73 @@
 #include <string.h>
 #include "mesas.h"
 
+//-------------------------------------------------------------------------------------------------
+
+//Arreglo de juegos validos para cada mesa
+static const char* juegosValidos[] = { "Ruleta", "Blackjack", "Poker" };
+
+//Constantes para validaciones y aux
+static const int CANT_JUEGOS = 3;
+static const int MESA_CAPACIDADMAX = 30;
+
+
+//Fucnion auxiliar para validar los juegos
+static int esValido(const char* juego) {
+    for (int i = 0; i < CANT_JUEGOS; i++) {
+        if (strcmp(juego, juegosValidos[i]) == 0) {
+            return 1; // 1: Juego valido
+        }
+    }
+    return 0; // 0: Juego no valido 
+}
+
+static int buscarPorId(Mesa* mesas, int cantidad, int id) {
+    for (int i = 0; i < cantidad; i++) {
+        if (mesas[i].id == id) { 
+            return i;
+        }
+    }
+    return -1; // No se encontró la mesa
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void altaMesa(Mesa** mesas, int* cantidad) {
+    Mesa nuevaMesa; //creacion de la mesa
+    nuevaMesa.id = (*cantidad > 0) ? (*mesas)[*cantidad - 1].id + 1 : 1; // Asignacion del ID
+
+    printf("Ingrese el nombre del juego (Ruleta, Blackjack, Poker): "); //solicita y agrega nombre del juego de la mesa
+    scanf(" %[^\n]", nuevaMesa.nombreJuego);
+
+    if (!esValido(nuevaMesa.nombreJuego)) { //comprueba que el juego sea valido, sino tira error
+        printf("Juego no válido. Mesa no creada.\n");
+        return;
+    }
+
+    printf("Capacidad máxima: "); //solicita la capacidad maxima de la mesa
+    scanf("%d", &nuevaMesa.capacidadMax);
+
+    if (nuevaMesa.capacidadMax <= 0 || nuevaMesa.capacidadMax > MESA_CAPACIDADMAX) { //comprueba que la capacidad sea valida, sino tira error
+        printf("Capacidad no válida. Mesa no creada.\n");
+        return;
+    }
+
+    nuevaMesa.disponible = 1; //asigna el resto de la informacion de la mesa
+    nuevaMesa.activa     = 1;
+
+    Mesa* temp = (Mesa*) realloc(*mesas, (*cantidad + 1) * sizeof(Mesa)); //redimensiona el arreglo de mesas para agregar la nueva mesa
+
+    if (temp == NULL) { //comprueba que se haya podido redimensionar el arreglo, sino tira error
+        printf("Error: no hay memoria disponible.\n");
+        return; 
+    }
+
+    *mesas = temp; //asigna el nuevo arreglo al puntero original
+    (*mesas)[*cantidad] = nuevaMesa; //agrega la nueva mesa al arreglo
+    (*cantidad)++; //aumento la cantidad de mesas
+
+    //guardarMesasEnArchivo(*mesas, *cantidad);
+    //printf("Mesa agregada correctamente.\n", nuevaMesa.id);
 
 }
 
