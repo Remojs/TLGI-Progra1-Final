@@ -12,19 +12,24 @@ Cliente cargarCliente()
     scanf("%s", &c.nombre);
     printf("Ingrese el DNI del cliente\n");
     scanf("%i", &c.dni);
-    nivelVip;   // 1=Bronce, 2=Plata, 3=Oro
-    float saldo;
-    int   activo; 
+    printf("Ingrese el Nivel VIP del cliente\n");
+    scanf("%i", &c.nivelVip);
+    printf("Ingrese el Saldo del cliente\n");
+    scanf("%fi", &c.saldo);
+    printf("Ingrese el Estado del cliente, 1(activo) \n");
+    scanf("%i", &c.estado);
     return c;
 }
 
-int cargarArrClientes(Cliente cliente[], int dim){
-    
+int cargarArrClientes(Cliente cliente[], int dim)
+{
+
     char control = 's';
     int i = 0;
-    
-    while(control == 's' && i<dim){
-        
+
+    while (control == 's' && i < dim)
+    {
+
         cliente[i] = cargarCliente();
         i++;
         printf("Desea cargar otro cliente?\n");
@@ -33,7 +38,7 @@ int cargarArrClientes(Cliente cliente[], int dim){
     return i;
 }
 
- void cargarClientesDesdeArchivo(Cliente cliente[], int dim)
+void cargarClientesDesdeArchivo(Cliente cliente[], int dim)
 {
     int val = cargarArrClientes(cliente, dim);
     FILE *archivo = fopen("clientes", "ab");
@@ -42,8 +47,7 @@ int cargarArrClientes(Cliente cliente[], int dim){
     {
         fwrite(&c, sizeof(Cliente), val, archivo);
     }
-    
-} 
+}
 
 /* void guardarClientesEnArchivo(Cliente arreglo[], int cantidad){
 

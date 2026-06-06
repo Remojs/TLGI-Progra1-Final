@@ -13,7 +13,7 @@ typedef struct {
     int  dni;
     int   nivelVip;   // 1=Bronce, 2=Plata, 3=Oro
     float saldo;
-    int   activo;     // 1=activo, 0=dado de baja
+    int  estado;     // 1=activo, 0=dado de baja
 } Cliente;
 
 typedef struct {
