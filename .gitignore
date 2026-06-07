@@ -1,10 +1,17 @@
+
+# Main especificos de test de cada dev
 lucasMain.c
 thiagoMain.c
 
+# Carpetas y archivos de configuración/IDE
 /.vscode
 /output
+
+# Archivos de documentación
 /docs
 
+# Archivos de datos
 mesas.dat
 
+# Archivo del compilador VSC
 menu
