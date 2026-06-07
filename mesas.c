@@ -315,8 +315,27 @@ void listarMesasPorCapacidad(Mesa* mesas, int cantidad) {
     
 }
 
-void mostrarOcupacionDiaria(Mesa* mesas, int cantidad, int ocupacion[][MAX_HORAS]) {
 
+void mostrarOcupacionDiaria(Mesa* mesas, int cantidad, int ocupacion[][MAX_HORAS]) {
+    if (cantidad == 0) { 
+        printf("No hay mesas registradas.\n"); //si no hay mesas registradas, mostramos un mensaje
+        return; 
+    }
+
+    printf("|------- Ocupación diaria de mesas -------| \n");
+    for (int i = 0; i < cantidad; i++) { //recorro cada mesa
+
+        printf("Mesa #%i — %s\n", mesas[i].id, mesas[i].nombreJuego); //mostrar encabezado
+
+        printf("Hora: "); for (int j = 0; j < MAX_HORAS; j++) printf("%i", j); //fila de horas (visual)
+
+        printf(" \n Jug.: "); //recorre cada hora de la mesa
+        for (int j = 0; j < MAX_HORAS; j++){
+            printf(ocupacion[i][j] == 0 ? "  -" : "%3i", ocupacion[i][j]); //si no hubo jugadores muestra -, sino muestra la cantidad de jugadores que hubo en esa hora
+        } //(jugadores de la mesa i en la hora j)
+
+        printf("\n\n"); //separador visual
+    }
 }
 
 void cargarMesasDesdeArchivo(Mesa** mesas, int* cantidad) {
