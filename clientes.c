@@ -3,36 +3,34 @@
 #include "clientes.h"
 #include "tipos.h"
 
+
 Cliente cargarCliente()
 {
     Cliente c;
     printf("Ingrese el ID del cliente\n");
     scanf("%i", &c.id);
     printf("Ingrese el Nombre del cliente\n");
-    scanf("%s", &c.nombre);
+    scanf("%s", c.nombre);                 
     printf("Ingrese el DNI del cliente\n");
-    scanf("%i", &c.dni);
+    scanf("%i", &c.dni);                 
     printf("Ingrese el Nivel VIP del cliente\n");
     scanf("%i", &c.nivelVip);
     printf("Ingrese el Saldo del cliente\n");
-    scanf("%fi", &c.saldo);
-    printf("Ingrese el Estado del cliente, 1(activo) \n");
+    scanf("%f", &c.saldo);                    \
+    printf("Ingrese el Estado del cliente, 1(activo) 0(de baja)\n");
     scanf("%i", &c.estado);
     return c;
 }
 
 int cargarArrClientes(Cliente cliente[], int dim)
 {
-
     char control = 's';
     int i = 0;
-
-    while (control == 's' && i < dim)
+    while ((control == 's' || control == 'S') && i < dim)
     {
-
         cliente[i] = cargarCliente();
         i++;
-        printf("Desea cargar otro cliente?\n");
+        printf("Desea cargar otro cliente? s/n\n");
         scanf(" %c", &control);
     }
     return i;
@@ -42,12 +40,32 @@ void cargarClientesDesdeArchivo(Cliente cliente[], int dim)
 {
     int val = cargarArrClientes(cliente, dim);
     FILE *archivo = fopen("clientes", "ab");
-    Cliente c;
     if (archivo != NULL)
     {
-        fwrite(&c, sizeof(Cliente), val, archivo);
+        fwrite(cliente, sizeof(Cliente), val, archivo); 
+        fclose(archivo);                                
     }
 }
+
+void mostrarClientes()
+{
+    FILE *archivo = fopen("clientes", "rb");
+    if (archivo != NULL)
+    {
+        Cliente c;
+        while (fread(&c, sizeof(Cliente), 1, archivo) == 1)  // mientras haya clientes para leer
+        {
+            printf("ID del cliente: %i\n", c.id);
+            printf("Nombre del cliente: %s\n", c.nombre);
+            printf("DNI del cliente: %i\n", c.dni);
+            printf("Nivel VIP del cliente: %i\n", c.nivelVip);
+            printf("Saldo del cliente: %.2f\n", c.saldo);
+            printf("Estado del cliente 1(activo)-0(de baja): %i\n\n", c.estado);
+        }
+        fclose(archivo);
+    }
+}
+
 
 /* void guardarClientesEnArchivo(Cliente arreglo[], int cantidad){
 
