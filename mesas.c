@@ -32,11 +32,24 @@ static int buscarPorId(Mesa* mesas, int cantidad, int id) {
     return -1; // No se encontró la mesa
 }
 
+static int generarId(Mesa* mesas, int cantidad) {
+    for (int id = 1; ; id++) {       // probamos desde el 1 en adelante
+        int existe = 0;
+        for (int i = 0; i < cantidad; i++) {
+            if (mesas[i].id == id) {  // si ese id ya está usado
+                existe = 1;
+                break;
+            }
+        }
+        if (!existe) return id; // si no está usado, ese es el libre
+    }
+}
+
 //-------------------------------------------------------------------------------------------------
 
 void altaMesa(Mesa** mesas, int* cantidad) {
     Mesa nuevaMesa; //creacion de la mesa
-    nuevaMesa.id = (*cantidad > 0) ? (*mesas)[*cantidad - 1].id + 1 : 1; // Asignacion del ID
+    nuevaMesa.id = generarId(*mesas, *cantidad); // Asignacion del ID
 
     printf("Ingrese el nombre del juego (Ruleta, Blackjack, Poker): "); //solicita y agrega nombre del juego de la mesa
     scanf("%s", nuevaMesa.nombreJuego);
@@ -70,6 +83,7 @@ void altaMesa(Mesa** mesas, int* cantidad) {
 
     guardarMesasEnArchivo(*mesas, *cantidad);
     printf("Mesa agregada correctamente.\n");
+    printf("-----------------------------------------\n");
 
 }
 
@@ -85,6 +99,15 @@ int bajaMesa(Mesa** mesas, int* cantidad) {
             printf("No existe una mesa con ID %i \n", idBuscado);
             return 0;
         }
+    
+    printf("Mesa encontrada, seguro que desea eliminar? (1=si, 0=no) \n"); //confirmacion de eliminacion
+    int confirmacion;
+    scanf("%i", &confirmacion);
+
+    if (confirmacion == 0) {
+        printf("Eliminación cancelada.\n");
+        return 0;
+    }
 
     for(int i = id; i < *cantidad - 1; i++) { //desplazamos las mesas siguientes para eliminar la mesa deseada
         (*mesas)[i] = (*mesas)[i + 1];
@@ -102,6 +125,7 @@ int bajaMesa(Mesa** mesas, int* cantidad) {
 
     guardarMesasEnArchivo(*mesas, *cantidad);
     printf("Mesa eliminada correctamente.\n");
+    printf("-----------------------------------------\n");
     return 1;
 
 }
@@ -119,14 +143,15 @@ int modificarMesa(Mesa* mesas, int cantidad) {
             return 0;
         }
 
+    printf("---------------------------\n");
     printf("\nDatos actuales de la mesa %i: \n", idBuscado); //muestro los datos actuales de la mesa
     printf("Juego: %s\n", mesas[id].nombreJuego);
     printf("Capacidad: %i \n", mesas[id].capacidadMax);
     printf("Disponibilidad: %s\n", mesas[id].disponible ? "Disponible" : "Ocupada");
     printf("Activa: %s\n", mesas[id].activa ? "Activa" : "Dada de baja");
-
+    printf("---------------------------\n");
     // - Modificar mesa ------------
-    printf("\n Tabla de modificaciones: \n");
+    printf("\n -- Tabla de modificaciones: --\n");
 
     // - Modificar ""Tipo de juego"" ------------
     
@@ -135,6 +160,7 @@ int modificarMesa(Mesa* mesas, int cantidad) {
     printf("1. Ruleta\n");
     printf("2. Blackjack\n");
     printf("3. Poker\n");
+    printf("---------------------------\n");
 
     int opcion;
     scanf("%i", &opcion);
@@ -146,6 +172,8 @@ int modificarMesa(Mesa* mesas, int cantidad) {
 
     printf("Nueva capacidad: (0 para mantener actual) \n");
     printf("[Valor actual: %i] \n", mesas[id].capacidadMax);
+    printf("---------------------------\n");
+
 
     int nuevaCap;
     scanf("%i", &nuevaCap);
@@ -154,6 +182,8 @@ int modificarMesa(Mesa* mesas, int cantidad) {
     // - Modificar ""disponibilidad"" ------------
     printf("Disponible: (1=si, 0=ocupada) \n");
     printf("[Valor actual: %s] \n", mesas[id].disponible ? "Disponible" : "Ocupada");
+    printf("---------------------------\n");
+
 
     int nuevaDisp;
     scanf("%i", &nuevaDisp);
@@ -162,6 +192,8 @@ int modificarMesa(Mesa* mesas, int cantidad) {
     // - Modificar ""activa"" ------------
     printf("Activa: (1=si, 0=dada de baja) \n");
     printf("[Valor actual: %s] \n", mesas[id].activa ? "Activa" : "Dada de baja");
+    printf("---------------------------\n");
+
 
     int nuevaAc;
     scanf("%i", &nuevaAc);
@@ -171,6 +203,8 @@ int modificarMesa(Mesa* mesas, int cantidad) {
 
     guardarMesasEnArchivo(mesas, cantidad);
     printf("Mesa modificada correctamente.\n");
+    printf("------------------------------------------------------\n");
+
     return 1;
 }
 
