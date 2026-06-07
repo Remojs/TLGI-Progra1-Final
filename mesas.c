@@ -191,8 +191,8 @@ int consultarMesa(Mesa* mesas, int cantidad) {
     printf("    | Mesa #%i                     | \n",   mesas[id].id);
     printf("    | Juego: %s                    | \n",   mesas[id].nombreJuego);
     printf("    | Capacidad: %d jugadores      | \n",   mesas[id].capacidadMax);
-    printf("    | Disponible: %s               | \n",   mesas[id].disponible ? "Sí" : "No");
-    printf("    | Estado: %s                   | \n",   mesas[id].activa     ? "Activa" : "Inactiva");
+    printf("    | Disponible: %s               | \n",   mesas[id].disponible ? "Disponible" : "Ocupada");
+    printf("    | Estado: %s                   | \n",   mesas[id].activa     ? "Activa" : "Dada de baja");
     printf("    |------------------------------| \n");
     return 1;
 }
