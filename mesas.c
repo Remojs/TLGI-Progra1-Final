@@ -68,8 +68,8 @@ void altaMesa(Mesa** mesas, int* cantidad) {
     (*mesas)[*cantidad] = nuevaMesa; //agrega la nueva mesa al arreglo
     (*cantidad)++; //aumento la cantidad de mesas
 
-    //guardarMesasEnArchivo(*mesas, *cantidad);
-    //printf("Mesa agregada correctamente.\n");
+    guardarMesasEnArchivo(*mesas, *cantidad);
+    printf("Mesa agregada correctamente.\n");
 
 }
 
@@ -100,8 +100,8 @@ int bajaMesa(Mesa** mesas, int* cantidad) {
         if (temp != NULL) *mesas = temp; //asignamos el nuevo arreglo al puntero original
     }
 
-    //guardarMesasEnArchivo(*mesas, *cantidad);
-    //printf("Mesa eliminada correctamente.\n");
+    guardarMesasEnArchivo(*mesas, *cantidad);
+    printf("Mesa eliminada correctamente.\n");
     return 1;
 
 }
@@ -169,8 +169,8 @@ int modificarMesa(Mesa* mesas, int cantidad) {
 
     //--------------------------
 
-    //guardarMesasEnArchivo(mesas, cantidad);
-    //printf("Mesa modificada correctamente.\n");
+    guardarMesasEnArchivo(mesas, cantidad);
+    printf("Mesa modificada correctamente.\n");
     return 1;
 }
 
@@ -327,7 +327,7 @@ void mostrarOcupacionDiaria(Mesa* mesas, int cantidad, int ocupacion[][MAX_HORAS
 
         printf("Mesa #%i — %s\n", mesas[i].id, mesas[i].nombreJuego); //mostrar encabezado
 
-        printf("Hora: "); for (int j = 0; j < MAX_HORAS; j++) printf("%i", j); //fila de horas (visual)
+        printf("Hora: "); for (int j = 0; j < MAX_HORAS; j++) printf("%3i", j); //fila de horas (visual)
 
         printf(" \n Jug.: "); //recorre cada hora de la mesa
         for (int j = 0; j < MAX_HORAS; j++){
@@ -338,10 +338,56 @@ void mostrarOcupacionDiaria(Mesa* mesas, int cantidad, int ocupacion[][MAX_HORAS
     }
 }
 
+
 void cargarMesasDesdeArchivo(Mesa** mesas, int* cantidad) {
+
+    FILE* f = fopen("mesas.dat", "rb");
+
+    if (f == NULL) { //si el archivo no existe, inicializamos el arreglo de mesas a NULL y la cantidad a 0
+        *cantidad = 0;
+        *mesas    = NULL;
+        return;
+    }
+
+    fread(cantidad, sizeof(int), 1, f); //leemos la cantidad de mesas guardada al principio del archivo
+
+    if (*cantidad <= 0) { //si la cantidad leida es 0 o negativa, inicializamos el arreglo de mesas a NULL y cerramos el archivo
+        *mesas = NULL;
+        fclose(f);
+        return;
+    }
+
+    *mesas = (Mesa*) malloc(*cantidad * sizeof(Mesa)); //reservamos memoria para el arreglo de mesas segun la cantidad
+
+    if (*mesas == NULL) { //si no se pudo asignar memoria para el arreglo de mesas, mostramos un mensaje de error y cerramos el archivo
+        printf("Error: no hay memoria para cargar las mesas.\n");
+        fclose(f);
+        return;
+    }
+
+    int leidos = fread(*mesas, sizeof(Mesa), *cantidad, f); //leemos las mesas del archivo y comprobamos que se hayan leido la cantidad esperada, sino mostramos una advertencia indicando que el archivo puede estar incompleto
+    if (leidos != *cantidad) {
+        printf("Advertencia: el archivo puede estar incompleto.\n");
+        *cantidad = leidos;
+    }
+
+    fclose(f);
+    printf("%i mesa(s) cargada(s) desde el archivo.\n", *cantidad);
 
 }
 
-void guardarMesasEnArchivo(Mesa* mesas, int cantidad) {
 
+void guardarMesasEnArchivo(Mesa* mesas, int cantidad) {
+    FILE* f = fopen("mesas.dat", "wb"); //abro el archivo 
+
+    if (f == NULL) { //validacion si el archivo no se pudo abrir
+        printf("Error: no se pudo abrir el archivo para guardar.\n");
+        return;
+    }
+
+    fwrite(&cantidad, sizeof(int), 1, f); //guardamos la cantidad de mesas al principio del archivo para la gestion de memoria
+
+    if (cantidad > 0) fwrite(mesas, sizeof(Mesa), cantidad, f); //si hay mesas, guardamos el arreglo de mesas en el archivo
+
+    fclose(f); //cerramos el archivo
 }
