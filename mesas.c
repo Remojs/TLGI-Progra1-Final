@@ -47,7 +47,7 @@ void altaMesa(Mesa** mesas, int* cantidad) {
     }
 
     printf("Capacidad máxima: "); //solicita la capacidad maxima de la mesa
-    scanf("%d", &nuevaMesa.capacidadMax);
+    scanf("%i", &nuevaMesa.capacidadMax);
 
     if (nuevaMesa.capacidadMax <= 0 || nuevaMesa.capacidadMax > MESA_CAPACIDADMAX) { //comprueba que la capacidad sea valida, sino tira error
         printf("Capacidad no válida. Mesa no creada.\n");
@@ -148,7 +148,7 @@ int modificarMesa(Mesa* mesas, int cantidad) {
     printf("[Valor actual: %i] \n", mesas[id].capacidadMax);
 
     int nuevaCap;
-    scanf("%d", &nuevaCap);
+    scanf("%i", &nuevaCap);
     if (nuevaCap > 0) mesas[id].capacidadMax = nuevaCap;
 
     // - Modificar ""disponibilidad"" ------------
@@ -156,7 +156,7 @@ int modificarMesa(Mesa* mesas, int cantidad) {
     printf("[Valor actual: %s] \n", mesas[id].disponible ? "Disponible" : "Ocupada");
 
     int nuevaDisp;
-    scanf("%d", &nuevaDisp);
+    scanf("%i", &nuevaDisp);
     if (nuevaDisp == 0 || nuevaDisp == 1) mesas[id].disponible = nuevaDisp;
 
     // - Modificar ""activa"" ------------
@@ -164,7 +164,7 @@ int modificarMesa(Mesa* mesas, int cantidad) {
     printf("[Valor actual: %s] \n", mesas[id].activa ? "Activa" : "Dada de baja");
 
     int nuevaAc;
-    scanf("%d", &nuevaAc);
+    scanf("%i", &nuevaAc);
     if (nuevaAc == 0 || nuevaAc == 1) mesas[id].activa = nuevaAc;
 
     //--------------------------
@@ -190,12 +190,13 @@ int consultarMesa(Mesa* mesas, int cantidad) {
     printf("    |------------------------------| \n");
     printf("    | Mesa #%i                     | \n",   mesas[id].id);
     printf("    | Juego: %s                    | \n",   mesas[id].nombreJuego);
-    printf("    | Capacidad: %d jugadores      | \n",   mesas[id].capacidadMax);
+    printf("    | Capacidad: %i jugadores      | \n",   mesas[id].capacidadMax);
     printf("    | Disponible: %s               | \n",   mesas[id].disponible ? "Disponible" : "Ocupada");
     printf("    | Estado: %s                   | \n",   mesas[id].activa     ? "Activa" : "Dada de baja");
     printf("    |------------------------------| \n");
     return 1;
 }
+
 
 void consultarMesasPorTipo(Mesa* mesas, int cantidad) {
 
@@ -211,9 +212,9 @@ void consultarMesasPorTipo(Mesa* mesas, int cantidad) {
             printf("    |------------------------------| \n");
             printf("    | Mesa #%i                     | \n",   mesas[i].id);
             printf("    | Juego: %s                    | \n",   mesas[i].nombreJuego);
-            printf("    | Capacidad: %d jugadores      | \n",   mesas[i].capacidadMax);
-            printf("    | Disponible: %s               | \n",   mesas[i].disponible ? "Sí" : "No");
-            printf("    | Estado: %s                   | \n",   mesas[i].activa     ? "Activa" : "Inactiva");
+            printf("    | Capacidad: %i jugadores      | \n",   mesas[i].capacidadMax);
+            printf("    | Disponible: %s               | \n",   mesas[i].disponible ? "Disponible" : "Ocupada");
+            printf("    | Estado: %s                   | \n",   mesas[i].activa     ? "Activa" : "Dada de baja");
             printf("    |------------------------------| \n");  
             encontradas++;
         }
@@ -226,13 +227,92 @@ void consultarMesasPorTipo(Mesa* mesas, int cantidad) {
 }
 
 
-
 void listarMesasAlfabetico(Mesa* mesas, int cantidad) {
 
+    if (cantidad == 0) { 
+        printf("No hay mesas registradas.\n"); 
+        return;} //si no hay mesas registradas, mostramos un mensaje 
+    
+    Mesa* copia = (Mesa*) malloc(cantidad * sizeof(Mesa)); //creamos una copia del arreglo
+
+    if(copia == NULL) {
+        printf("Error: no hay memoria disponible.\n");
+        return;} //si no se hizo la copia, mostramos un mensaje 
+
+    for(int i = 0; i < cantidad; i++) {
+         copia[i] = mesas[i];
+    }//copiamos el arreglo original a la copia
+
+    //orden alfabetico con metodo de seleccion
+    for (int i = 0; i < cantidad - 1; i++) {
+        int minIdx = i;
+
+        for (int j = i + 1; j < cantidad; j++) {
+            if (strcmp(copia[j].nombreJuego, copia[minIdx].nombreJuego) < 0)
+            minIdx = j;
+        }
+
+        if (minIdx != i) {
+            Mesa temp   = copia[i];
+            copia[i]    = copia[minIdx];
+            copia[minIdx] = temp;
+        }
+    }
+
+    for (int i = 0; i < cantidad; i++) { //mapeamos la copia ordenada
+            printf("    |------------------------------| \n");
+            printf("    | Mesa #%i                     | \n",   copia[i].id);
+            printf("    | Juego: %s                    | \n",   copia[i].nombreJuego);
+            printf("    | Capacidad: %i jugadores      | \n",   copia[i].capacidadMax);
+            printf("    | Disponible: %s               | \n",   copia[i].disponible ? "Disponible" : "Ocupada");
+            printf("    | Estado: %s                   | \n",   copia[i].activa     ? "Activa" : "Dada de baja");
+            printf("    |------------------------------| \n");  
+    }
+
+    free(copia); //limpiamos la memoria
 }
 
-void listarMesasPorCapacidad(Mesa* mesas, int cantidad) {
 
+void listarMesasPorCapacidad(Mesa* mesas, int cantidad) {
+    if (cantidad == 0) { 
+        printf("No hay mesas registradas.\n"); 
+        return;} //si no hay mesas registradas, mostramos un mensaje 
+    
+    Mesa* copia = (Mesa*) malloc(cantidad * sizeof(Mesa)); //creamos una copia del arreglo
+
+    if(copia == NULL) {
+        printf("Error: no hay memoria disponible.\n");
+        return;} //si no se hizo la copia, mostramos un mensaje 
+
+    for(int i = 0; i < cantidad; i++) {
+         copia[i] = mesas[i];
+    }//copiamos el arreglo original a la copia
+
+    //orden con metodo de insercion
+    for (int i = 1; i < cantidad; i++) {
+        Mesa actual = copia[i];
+        int j = i - 1;
+
+        while (j >= 0 && copia[j].capacidadMax > actual.capacidadMax) { //movemos los elementos mayores al actual
+            copia[j + 1] = copia[j];
+            j--;
+        }
+
+        copia[j + 1] = actual; // insertamos el elemento
+    }
+
+    for (int i = 0; i < cantidad; i++) { //mapeamos la copia ordenada
+            printf("    |------------------------------| \n");
+            printf("    | Mesa #%i                     | \n",   copia[i].id);
+            printf("    | Juego: %s                    | \n",   copia[i].nombreJuego);
+            printf("    | Capacidad: %i jugadores      | \n",   copia[i].capacidadMax);
+            printf("    | Disponible: %s               | \n",   copia[i].disponible ? "Disponible" : "Ocupada");
+            printf("    | Estado: %s                   | \n",   copia[i].activa     ? "Activa" : "Dada de baja");
+            printf("    |------------------------------| \n");  
+    }
+
+    free(copia); //limpiamos la memoria
+    
 }
 
 void mostrarOcupacionDiaria(Mesa* mesas, int cantidad, int ocupacion[][MAX_HORAS]) {
