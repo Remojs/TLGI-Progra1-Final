@@ -13,6 +13,7 @@ int main() {
     int   cantMesas = 0;
 
     cargarMesasDesdeArchivo(&mesas, &cantMesas);
+    iniciarReclamos();
 
     int opcion;
 
@@ -48,6 +49,8 @@ int main() {
                     printf("0. Volver al menú principal\n");
                     printf("Opción: ");
                     scanf("%d", &opMesa);
+                    printf("\n|---------------------------------|\n");
+                    printf("\n\n");
 
                     switch (opMesa) {
                         case 1: altaMesa(&mesas, &cantMesas);              break;
@@ -66,12 +69,35 @@ int main() {
                 break;
             }
 
-            case 3: { //menu de reclamos
-                printf("Módulo de reclamos en desarrollo.\n");
+            case 3: { // menu de reclamos
+                int opReclamo;
+                do {
+                    printf("\n|------- Reclamos del día -------|\n");
+                    printf("1. Agregar reclamo\n");
+                    printf("2. Atender reclamo\n");
+                    printf("3. Ver reclamos pendientes\n");
+                    printf("4. Vaciar pila de reclamos\n");
+                    printf("0. Volver al menú principal\n");
+                    printf("Opción: ");
+                    scanf("%d", &opReclamo);
+                    printf("\n|---------------------------------|\n");
+                    printf("\n\n");
+
+                    switch (opReclamo) {
+                        case 1: agregarReclamo(); break;
+                        case 2: atenderReclamo(); break;
+                        case 3: verReclamos();    break;
+                        case 4: vaciarPila();     break;
+                        case 0: break;
+                        default: printf("Opción inválida.\n");
+                    }
+
+                } while (opReclamo != 0);
                 break;
             }
 
             case 0: printf("Saliendo...\n"); break;
+
             default: printf("Opción inválida.\n");
         }
 

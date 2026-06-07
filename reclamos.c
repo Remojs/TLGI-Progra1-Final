@@ -91,6 +91,8 @@ void atenderReclamo() {
         return;
     }
 
+    printf("Atendiendo reclamo...\n"); 
+
     atender(); // la recursion muestra el mas antiguo y muestra su slot como libre
     printf("Reclamo atendido correctamente.\n");
     printf("-----------------------------------------\n");
@@ -116,6 +118,8 @@ void verReclamos() {
         printf("  ---------------------------------- \n");
     }
 
+
+    printf("- Reclamo mas antiguo -\n");
     printf("\n Total pendientes: %i \n", pila.postope); // mostramos la cantidad total de reclamos pendientes
     printf("-----------------------------------------\n");
 
