@@ -6,6 +6,16 @@ Proyecto grupal, no se rompan la cabeza, cualquier duda consultar a Thiago (porf
 
 ---
 
+### Como ejecuto este maravilloso proyecto?
+
+- Para ejecutar el codigo usar el menu poniendo en consola:
+
+**"gcc main.c pila.c mesas.c clientes.c reclamos.c -o menu"**
+
+y luego **"./menu"**
+
+---
+
 ## Cómo está organizado el proyecto
 
 El proyecto está dividido en archivos, y cada uno tiene su responsabilidad. La idea es que cada uno trabaje en su propio archivo.
@@ -163,5 +173,3 @@ Menú sugerido:
 - **Avisar si modificás funciones en el `.h` (la declaración)** — si cambiás los parámetros de una función, el `main.c` deja de funcionar
 
 ---
-
-Para ejecutar el codigo usar el ./menu poniendo eso exacto en consola :)
