@@ -12,11 +12,11 @@ void mostrarUnCliente(Cliente c) {
     printf("  Estado:   %s\n",   c.estado == 1 ? "Activo" : "Baja");
 }
 
-Cliente cargarCliente(){
+Cliente cargarCliente(int cantidad){
     Cliente c;
 
-    printf("Ingrese el ID del cliente\n");
-    scanf("%i", &c.id);
+    printf("ID del cliente: #%i \n", cantidad);
+    c.id = cantidad; // El ID se asigna automáticamente sumando 1 a la cantidad actual de clientes
 
     printf("Ingrese el Nombre del cliente\n");
     scanf("%s", c.nombre);
@@ -112,7 +112,7 @@ void altaCliente(Cliente arreglo[], int *cantidad){
         return;
     }
 
-    Cliente nuevo = cargarCliente();
+    Cliente nuevo = cargarCliente(*cantidad);
 
     for (int i = 0; i < *cantidad; i++){
         if (arreglo[i].dni == nuevo.dni && arreglo[i].estado == 1){
