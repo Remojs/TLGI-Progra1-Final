@@ -161,3 +161,7 @@ Menú sugerido:
 ### ❌ No hacer sin hablar con el grupo
 - **No tocar `tipos.h` solo** — si cambiás una struct sin avisar, el código de todos deja de compilar y cobras
 - **Avisar si modificás funciones en el `.h` (la declaración)** — si cambiás los parámetros de una función, el `main.c` deja de funcionar
+
+---
+
+Para ejecutar el codigo usar el ./menu poniendo eso exacto en consola :)
