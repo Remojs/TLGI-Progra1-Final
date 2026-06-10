@@ -10,8 +10,5 @@ thiagoMain.c
 # Archivos de documentación
 /docs
 
-# Archivos de datos
-mesas.dat
-
 # Archivo del compilador VSC
 menu
