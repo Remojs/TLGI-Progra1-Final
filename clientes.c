@@ -3,6 +3,7 @@
 #include "clientes.h"
 #include "tipos.h"
 
+//Est funcion recibe un cliente con sus datos y lo muestra por pantalla
 void mostrarUnCliente(Cliente c) {
     printf("  ID:       %d\n",   c.id);
     printf("  Nombre:   %s\n",   c.nombre);
@@ -11,8 +12,13 @@ void mostrarUnCliente(Cliente c) {
     printf("  Saldo:    %.2f\n", c.saldo);
     printf("  Estado:   %s\n",   c.estado == 1 ? "Activo" : "Baja");
 }
+<<<<<<< Updated upstream
 
 Cliente cargarCliente(int cantidad){
+=======
+//Carga un cliente, pidiendolo por teclado. Y pone el estado en 1 automaticamente
+Cliente cargarCliente(){
+>>>>>>> Stashed changes
     Cliente c;
 
     printf("ID del cliente: #%i \n", cantidad);
@@ -34,7 +40,7 @@ Cliente cargarCliente(int cantidad){
 
     return c;
 }
-
+//Esta funcion se llama al iniciar el programa y lee cliente por cliente, metiendolos en el arreglo.
 void cargarClientesDesdeArchivo(Cliente arreglo[], int *cantidad){
 
     FILE *archivo = fopen("clientes.dat", "rb"); // Para
@@ -56,7 +62,7 @@ void cargarClientesDesdeArchivo(Cliente arreglo[], int *cantidad){
 
     printf("Se cargaron %i clientes desde el archivo\n", *cantidad);
 }
-
+//Esta funcion se llama cada vez que hay un cambio, pisa el archivo desde cero, si existe lo borra y sino lo crea.
 void guardarClientesEnArchivo(Cliente arreglo[], int cantidad)
 {
 
@@ -73,7 +79,7 @@ void guardarClientesEnArchivo(Cliente arreglo[], int cantidad)
     }
     
 }
-
+//Esta funcion recibe un cliente y lo muestra
 void mostrarClientes()
 {
     FILE *archivo = fopen("clientes.dat", "rb");
@@ -105,11 +111,10 @@ int buscarPorId(Cliente arreglo[], int cantidad, int id){
     }
     return -1;
 }
-
+//Esta funcion agrega un cliente nuevo, y mediante una serie de pasos, determina si puede crearlo, o no
 void altaCliente(Cliente arreglo[], int *cantidad){
     if (*cantidad >= MAX_CLIENTES){
         printf("ERROR, NO SE PUEDEN CREAR MAS CLIENTES, SE ALCANZO EL LIMITE (%i) \n", MAX_CLIENTES);
-        return;
     }
 
     Cliente nuevo = cargarCliente(*cantidad);
@@ -117,7 +122,6 @@ void altaCliente(Cliente arreglo[], int *cantidad){
     for (int i = 0; i < *cantidad; i++){
         if (arreglo[i].dni == nuevo.dni && arreglo[i].estado == 1){
             printf("Error, Ya se ha creado un cliente con ese DNI \n");
-            return;
         }
     }
 
@@ -128,8 +132,7 @@ void altaCliente(Cliente arreglo[], int *cantidad){
     printf("Se creo el cliente correctamente\n");
 }
 // Esta funcion busca el ID que le damos para dar de baja, si lo encuentra, le cambia el estado de 1 a 0,
-// no lo borra, solo le cambia el estado, reutilice la funcion de buscarPorId ya que me permite llegar al resultado q busco, que es encontrar el ID
-
+// no lo borra, solo le cambia el estado, a eso se le llama baja Logica
 int bajaCliente(Cliente arreglo[], int cantidad){
     int id;
     printf("Ingrese el ID del cliente que desea dar de baja \n ");
@@ -227,7 +230,6 @@ int consultarCliente(Cliente arreglo[], int cantidad) {
 void listarClientesAlfabetico(Cliente arreglo[], int cantidad) {
     if (cantidad == 0) {
         printf("  No hay clientes cargados.\n");
-        return;
     }
  
     // Hacemos una copia para no tocar el arreglo real
@@ -272,7 +274,6 @@ void listarClientesAlfabetico(Cliente arreglo[], int cantidad) {
 void listarClientesPorId(Cliente arreglo[], int cantidad) {
     if (cantidad == 0) {
         printf("  No hay clientes cargados.\n");
-        return;
     }
  
     Cliente copia[MAX_CLIENTES];
