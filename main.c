@@ -9,35 +9,63 @@ int ocupacion[MAX_MESAS][MAX_HORAS];
 
 int main() {
 
-    Mesa* mesas    = NULL;
-    int   cantMesas = 0;
+    // ── inicialización ───────────────────────────────────────────────────
+    Mesa*  mesas       = NULL;
+    int    cantMesas   = 0;
+    Cliente clientes[MAX_CLIENTES];
+    int    cantClientes = 0;
 
     cargarMesasDesdeArchivo(&mesas, &cantMesas);
+    cargarClientesDesdeArchivo(clientes, &cantClientes);
     iniciarReclamos();
 
     int opcion;
 
     do {
         printf("\n|------- Casino Spiderman — Menú Principal -------|\n");
-        printf("1. Gestión de Clientes \n");
-        printf("2. Gestión de Mesas \n");
-        printf("3. Reclamos del día \n");
-        printf("0. Salir \n");
+        printf("1. Gestión de Clientes\n");
+        printf("2. Gestión de Mesas\n");
+        printf("3. Reclamos del día\n");
+        printf("0. Salir\n");
         printf("Opción: ");
         scanf("%d", &opcion);
 
         switch (opcion) {
 
-            case 1: { //menu de clientes
-                printf("Módulo de clientes en desarrollo.\n");
+            case 1: { // ── menú clientes ──────────────────────────────────
+                int opCliente;
+                do {
+                    printf("\n|------- Gestión de Clientes -------|\n");
+                    printf("1. Alta cliente\n");
+                    printf("2. Baja cliente\n");
+                    printf("3. Modificar cliente\n");
+                    printf("4. Consultar cliente\n");
+                    printf("5. Listar alfabético\n");
+                    printf("6. Listar por ID\n");
+                    printf("0. Volver al menú principal\n");
+                    printf("Opción: ");
+                    scanf("%d", &opCliente);
+                    printf("\n|---------------------------------|\n\n");
+
+                    switch (opCliente) {
+                        case 1: altaCliente(clientes, &cantClientes);        break;
+                        case 2: bajaCliente(clientes, cantClientes);         break;
+                        case 3: modificarCliente(clientes, cantClientes);    break;
+                        case 4: consultarCliente(clientes, cantClientes);    break;
+                        case 5: listarClientesAlfabetico(clientes, cantClientes); break;
+                        case 6: listarClientesPorId(clientes, cantClientes); break;
+                        case 0: break;
+                        default: printf("Opción inválida.\n");
+                    }
+
+                } while (opCliente != 0);
                 break;
             }
 
-            case 2: { //menu de mesas
+            case 2: { // ── menú mesas ─────────────────────────────────────
                 int opMesa;
                 do {
                     printf("\n|------- Gestión de Mesas -------|\n");
-                    printf(" MENU PRINCIPAL \n");
                     printf("1. Alta mesa\n");
                     printf("2. Baja mesa\n");
                     printf("3. Modificar mesa\n");
@@ -49,17 +77,16 @@ int main() {
                     printf("0. Volver al menú principal\n");
                     printf("Opción: ");
                     scanf("%d", &opMesa);
-                    printf("\n|---------------------------------|\n");
-                    printf("\n\n");
+                    printf("\n|---------------------------------|\n\n");
 
                     switch (opMesa) {
-                        case 1: altaMesa(&mesas, &cantMesas);              break;
-                        case 2: bajaMesa(&mesas, &cantMesas);              break;
-                        case 3: modificarMesa(mesas, cantMesas);           break;
-                        case 4: consultarMesa(mesas, cantMesas);           break;
-                        case 5: consultarMesasPorTipo(mesas, cantMesas);   break;
-                        case 6: listarMesasAlfabetico(mesas, cantMesas);   break;
-                        case 7: listarMesasPorCapacidad(mesas, cantMesas); break;
+                        case 1: altaMesa(&mesas, &cantMesas);                        break;
+                        case 2: bajaMesa(&mesas, &cantMesas);                        break;
+                        case 3: modificarMesa(mesas, cantMesas);                     break;
+                        case 4: consultarMesa(mesas, cantMesas);                     break;
+                        case 5: consultarMesasPorTipo(mesas, cantMesas);             break;
+                        case 6: listarMesasAlfabetico(mesas, cantMesas);             break;
+                        case 7: listarMesasPorCapacidad(mesas, cantMesas);           break;
                         case 8: mostrarOcupacionDiaria(mesas, cantMesas, ocupacion); break;
                         case 0: break;
                         default: printf("Opción inválida.\n");
@@ -69,7 +96,7 @@ int main() {
                 break;
             }
 
-            case 3: { // menu de reclamos
+            case 3: { // ── menú reclamos ──────────────────────────────────
                 int opReclamo;
                 do {
                     printf("\n|------- Reclamos del día -------|\n");
@@ -80,8 +107,7 @@ int main() {
                     printf("0. Volver al menú principal\n");
                     printf("Opción: ");
                     scanf("%d", &opReclamo);
-                    printf("\n|---------------------------------|\n");
-                    printf("\n\n");
+                    printf("\n|---------------------------------|\n\n");
 
                     switch (opReclamo) {
                         case 1: agregarReclamo(); break;
@@ -97,12 +123,11 @@ int main() {
             }
 
             case 0: printf("Saliendo...\n"); break;
-
             default: printf("Opción inválida.\n");
         }
 
     } while (opcion != 0);
 
-    free(mesas); //liberamos la memoria del arreglo de mesas antes de salir
+    free(mesas);
     return 0;
 }

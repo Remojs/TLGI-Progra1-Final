@@ -3,8 +3,16 @@
 #include "clientes.h"
 #include "tipos.h"
 
-Cliente cargarCliente()
-{
+void mostrarUnCliente(Cliente c) {
+    printf("  ID:       %d\n",   c.id);
+    printf("  Nombre:   %s\n",   c.nombre);
+    printf("  DNI:      %d\n",   c.dni);
+    printf("  VIP:      %d\n",   c.nivelVip);
+    printf("  Saldo:    %.2f\n", c.saldo);
+    printf("  Estado:   %s\n",   c.estado == 1 ? "Activo" : "Baja");
+}
+
+Cliente cargarCliente(){
     Cliente c;
 
     printf("Ingrese el ID del cliente\n");
@@ -27,47 +35,48 @@ Cliente cargarCliente()
     return c;
 }
 
-void cargarClientesDesdeArchivo(Cliente arreglo[], int *cantidad)
-{
+void cargarClientesDesdeArchivo(Cliente arreglo[], int *cantidad){
 
-    FILE *archivo = fopen("Clientes", "rb"); // Para
+    FILE *archivo = fopen("clientes.dat", "rb"); // Para
 
     *cantidad = 0;
 
-    if (archivo != NULL)
-    {
+    if (archivo != NULL){
         while (*cantidad < MAX_CLIENTES && fread(&arreglo[*cantidad], sizeof(Cliente), 1, archivo) == 1)
         {
-            *cantidad++;
+            (*cantidad)++;
         }
+        fclose(archivo);
     }
-    else
-    {
+    else{
         printf("No se encontro el archivo de clientes, se crea uno nuevo\n");
     }
-    fclose(archivo);
+
+    
 
     printf("Se cargaron %i clientes desde el archivo\n", *cantidad);
 }
+
 void guardarClientesEnArchivo(Cliente arreglo[], int cantidad)
 {
 
-    FILE *archivo = fopen("Clientes", "wb");
+    FILE *archivo = fopen("clientes.dat", "wb");
 
     if (archivo != NULL)
     {
         fwrite(arreglo, sizeof(Cliente), cantidad, archivo);
+        fclose(archivo);
     }
     else
     {
         printf("Error, no se pudo abrir el archivo\n");
     }
-    fclose(archivo);
+    
 }
 
 void mostrarClientes()
 {
-    FILE *archivo = fopen("clientes", "rb");
+    FILE *archivo = fopen("clientes.dat", "rb");
     if (archivo != NULL)
     {
         Cliente c;
@@ -83,10 +92,10 @@ void mostrarClientes()
         fclose(archivo);
     }
 }
+
 // Esta funcion la hice para buscar un ID en el arreglo, y fijarme si estaba cargado, si lo encuentra devuelve
 // el indice del arreglo en el que esta, y sino devuelve -1
-int buscarPorId(Cliente arreglo[], int cantidad, int id)
-{
+int buscarPorId(Cliente arreglo[], int cantidad, int id){
     for (int i = 0; i < cantidad; i++)
     {
         if (arreglo[i].id == id)
@@ -96,24 +105,24 @@ int buscarPorId(Cliente arreglo[], int cantidad, int id)
     }
     return -1;
 }
-void altaCliente(Cliente arreglo[], int *cantidad)
-{
-    if (*cantidad >= MAX_CLIENTES)
-    {
+
+void altaCliente(Cliente arreglo[], int *cantidad){
+    if (*cantidad >= MAX_CLIENTES){
         printf("ERROR, NO SE PUEDEN CREAR MAS CLIENTES, SE ALCANZO EL LIMITE (%i) \n", MAX_CLIENTES);
+        return;
     }
 
     Cliente nuevo = cargarCliente();
 
-    for (int i = 0; i < *cantidad; i++)
-    {
-        if (arreglo[i].dni == nuevo.dni && arreglo[i].estado == 1)
-        {
+    for (int i = 0; i < *cantidad; i++){
+        if (arreglo[i].dni == nuevo.dni && arreglo[i].estado == 1){
             printf("Error, Ya se ha creado un cliente con ese DNI \n");
+            return;
         }
     }
+
     arreglo[*cantidad] = nuevo;
-    *cantidad++;
+    (*cantidad)++;
 
     guardarClientesEnArchivo(arreglo, *cantidad);
     printf("Se creo el cliente correctamente\n");
@@ -121,8 +130,7 @@ void altaCliente(Cliente arreglo[], int *cantidad)
 // Esta funcion busca el ID que le damos para dar de baja, si lo encuentra, le cambia el estado de 1 a 0,
 // no lo borra, solo le cambia el estado, reutilice la funcion de buscarPorId ya que me permite llegar al resultado q busco, que es encontrar el ID
 
-int bajaCliente(Cliente arreglo[], int cantidad)
-{
+int bajaCliente(Cliente arreglo[], int cantidad){
     int id;
     printf("Ingrese el ID del cliente que desea dar de baja \n ");
     scanf("%i", &id);
@@ -131,12 +139,12 @@ int bajaCliente(Cliente arreglo[], int cantidad)
 
     if (pos == -1)
     {
-        print("No se encontro el cliente con el ID %i \n", id);
+        printf("No se encontro el cliente con el ID %i \n", id);
         return 0;
     }
     if (arreglo[pos].estado == 0)
     {
-        print("El cliente ya estaba dado de baja\n");
+        printf("El cliente ya estaba dado de baja\n");
         return 0;
     }
     arreglo[pos].estado = 0;
@@ -147,44 +155,46 @@ int bajaCliente(Cliente arreglo[], int cantidad)
 }
 
 // int → 1 si encontró y dio de baja, 0 si no encontró el ID
-int modificarCliente(Cliente arreglo[], int cantidad){
+int modificarCliente(Cliente arreglo[], int cantidad) {
+
     int id;
     printf("Ingrese el ID del cliente que quiere modificar:\n");
     scanf("%i", &id);
 
     int pos = buscarPorId(arreglo, cantidad, id);
 
-    if(pos == -1 || arreglo[pos].estado == 0){
-        print("No se encontro un cliente activo con el ID %i \n", id);
+    if (pos == -1 || arreglo[pos].estado == 0) {
+        printf("No se encontro un cliente activo con el ID %i \n", id);
         return 0;
     }
 
     printf("Datos del cliente: \n");
     mostrarUnCliente(arreglo[pos]);
+    printf("\n(-1 para mantener el valor actual)\n");
 
-    printf("\n Nuevo nombre (presiona enter para dejarlo igual '%s'):", arreglo[pos].nombre);
+    // nombre
+    printf("Nuevo nombre (actual: %s): ", arreglo[pos].nombre);
     char temp[50];
     scanf("%s", temp);
-     if(strlen(temp)>0){
+    if (strcmp(temp, "-1") != 0)      // si NO es -1, actualizamos
         strcpy(arreglo[pos].nombre, temp);
-     }
 
-       printf("Nuevo nivel VIP (1/2/3, Enter=0 para mantener %d): ", arreglo[pos].nivelVip);
+    // nivel VIP
+    printf("Nuevo nivel VIP 1/2/3 (actual: %d): ", arreglo[pos].nivelVip);
     int nuevoNivel;
     scanf("%d", &nuevoNivel);
-    if (nuevoNivel >= 1 && nuevoNivel <= 3) {
+    if (nuevoNivel != -1 && nuevoNivel >= 1 && nuevoNivel <= 3)
         arreglo[pos].nivelVip = nuevoNivel;
-    }
- 
-    printf("Nuevo saldo (Enter=0 para mantener %.2f): ", arreglo[pos].saldo);
+
+    // saldo
+    printf("Nuevo saldo (actual: %.2f): ", arreglo[pos].saldo);
     float nuevoSaldo;
     scanf("%f", &nuevoSaldo);
-    if (nuevoSaldo > 0) {
+    if (nuevoSaldo != -1)
         arreglo[pos].saldo = nuevoSaldo;
-    }
- 
+
     guardarClientesEnArchivo(arreglo, cantidad);
-    printf("  Cliente modificado correctamente.\n");
+    printf("Cliente modificado correctamente.\n");
     return 1;
 }
  
