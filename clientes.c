@@ -14,21 +14,47 @@ void mostrarUnCliente(Cliente c) {
 
 Cliente cargarCliente(int cantidad){
     Cliente c;
+    Cliente temp;
 
     printf("ID del cliente: #%i \n", cantidad);
     c.id = cantidad; // El ID se asigna automáticamente sumando 1 a la cantidad actual de clientes
 
     printf("Ingrese el Nombre del cliente\n");
-    scanf("%s", c.nombre);
+    scanf("%s", temp.nombre);
+    while (strlen(temp.nombre) == 0) { // Validamos que el nombre no esté vacío
+        printf("El nombre no puede estar vacío. Ingrese el Nombre del cliente:\n");
+        scanf("%s", temp.nombre);
+    }
+    while (strlen(temp.nombre) >= 30) { // Validamos que el nombre no exceda los 30 caracteres
+        printf("El nombre no puede exceder los 30 caracteres. Ingrese el Nombre del cliente:\n");
+        scanf("%s", temp.nombre);
+    }
+    strcpy(c.nombre, temp.nombre);
+
 
     printf("Ingrese el DNI del cliente\n");
-    scanf("%i", &c.dni);
+    scanf("%i", &temp.dni);
+    while (temp.dni <= 0) { // Validamos que el DNI sea un número positivo
+        printf("El DNI debe ser un número positivo. Ingrese el DNI del cliente:\n");
+        scanf("%i", &temp.dni);
+    }
+    c.dni = temp.dni;
 
     printf("Ingrese el Nivel VIP del cliente\n");
-    scanf("%i", &c.nivelVip);
-
+    scanf("%i", &temp.nivelVip);
+    while (temp.nivelVip < 1 || temp.nivelVip > 3) { // Validamos que el nivel VIP sea 1, 2 o 3
+        printf("El Nivel VIP debe ser 1, 2 o 3. Ingrese el Nivel VIP del cliente:\n");
+        scanf("%i", &temp.nivelVip);
+    }
+    c.nivelVip = temp.nivelVip;
+    
     printf("Ingrese el Saldo del cliente\n");
-    scanf("%f", &c.saldo);
+    scanf("%f", &temp.saldo);
+    while (temp.saldo < 0) { // Validamos que el saldo no sea negativo
+        printf("El Saldo no puede ser negativo. Ingrese el Saldo del cliente:\n");
+        scanf("%f", &temp.saldo);
+    }
+    c.saldo = temp.saldo;
 
     c.estado = 1; // El estado se pone en 1 para que el usuario al crearlo ya este de alta
 

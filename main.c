@@ -43,9 +43,9 @@ int main() {
                     printf("5. Listar alfabético\n");
                     printf("6. Listar por ID\n");
                     printf("0. Volver al menú principal\n");
+                    printf("\n|---------------------------------|\n\n");
                     printf("Opción: ");
                     scanf("%d", &opCliente);
-                    printf("\n|---------------------------------|\n\n");
 
                     switch (opCliente) {
                         case 1: altaCliente(clientes, &cantClientes);        break;
